@@ -10,7 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_30_210617) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_30_211314) do
+  create_table "banned_ips", force: :cascade do |t|
+    t.string "client_ip"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "super_tokens", force: :cascade do |t|
+    t.string "agent"
+    t.string "token"
+    t.integer "user_id"
+    t.string "client_ip"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "username"
     t.string "email"
