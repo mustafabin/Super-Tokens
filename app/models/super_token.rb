@@ -2,12 +2,25 @@ class SuperToken < ApplicationRecord
     validates_uniqueness_of :token
     belongs_to :user
     # if no limit is desired then set const to 0
-    LIMIT_TOKENS_PER_USER = 2 
+    # avoid changing this number but if changed all tokens prior to change will be deleted ordered by usage (the most active token stays)
+    LIMIT_TOKENS_PER_USER = 2
     def self.generate_token(user,request)
         if user && request
             all_tokens = SuperToken.where(user_id: user.id)
-            if all_tokens.length >= LIMIT_TOKENS_PER_USER
-                all_tokens.order("updated_at")[0].destroy
+            # if there is a limit destroy the least active token
+            if LIMIT_TOKENS_PER_USER != 0 && all_tokens.length >= LIMIT_TOKENS_PER_USER
+                # if the length of tokens exceeds limit destroy the oldest tokens
+                if all_tokens.length > LIMIT_TOKENS_PER_USER
+                    # Because the amount of active tokens exceeds the limit
+                    # All of oldest tokens up to the limit must be deleted 
+                    # This happens when the const LIMIT_TOKENS_PER_USER is changed from last start up
+                    # Due to the limit being variable we must order the tokens first and grab the latest valid time 
+                    # and deleting all the tokens younger than the youngest valid token (the younger the token the most recently it has been used)
+                    last_valid_time = all_tokens.order("updated_at DESC").slice(0,LIMIT_TOKENS_PER_USER-1).last.updated_at
+                    all_tokens.where("updated_at < ?", last_valid_time).destroy_all
+                else
+                    all_tokens.order("updated_at")[0].destroy
+                end
             end
             # generate has https://github.com/rails/rails/blob/main/activerecord/lib/active_record/secure_token.rb
             hash = SecureRandom.base58(36)
