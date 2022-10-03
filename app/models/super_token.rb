@@ -5,6 +5,10 @@ class SuperToken < ApplicationRecord
     LIMIT_TOKENS_PER_USER = 2 
     def self.generate_token(user,request)
         if user && request
+            all_tokens = SuperToken.where(user_id: user.id)
+            if all_tokens.length >= LIMIT_TOKENS_PER_USER
+                all_tokens.order("updated_at")[0].destroy
+            end
             # generate has https://github.com/rails/rails/blob/main/activerecord/lib/active_record/secure_token.rb
             hash = SecureRandom.base58(36)
             # generate token based off user
