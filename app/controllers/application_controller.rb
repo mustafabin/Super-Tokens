@@ -3,12 +3,7 @@ class ApplicationController < ActionController::API
     rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_response
 
     def authorize
-        is_banned = BannedIp.find_by(client_ip: request.remote_ip)
-        if !is_banned 
-            @user = SuperToken.vaildate_super(request.headers["SuperToken"], request)
-        else
-            @user = {status: "bad", error:"403 forbidden", message:"BANNED IP"}
-        end
+        @user = SuperToken.vaildate_super request
     end
 
     private

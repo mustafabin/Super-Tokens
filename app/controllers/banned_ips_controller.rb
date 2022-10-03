@@ -1,2 +1,0 @@
-class BannedIpsController < ApplicationController
-end
