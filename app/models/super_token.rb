@@ -4,6 +4,7 @@ class SuperToken < ApplicationRecord
     # if no limit is desired then set const to 0
     # avoid changing this number but if changed all tokens prior to change will be deleted ordered by usage (the most active token stays)
     LIMIT_TOKENS_PER_USER = 2
+    AUTO_REFRESH = false
     def self.generate_token(user,request)
         if user && request
             all_tokens = SuperToken.where(user_id: user.id)
@@ -37,7 +38,9 @@ class SuperToken < ApplicationRecord
                 super_token.destroy 
                 {status: "bad", error:"401 not authorized", message:"EXPIRED TOKEN"}
             else
-                super_token.update(updated_at: Time.now)
+                if AUTO_REFRESH 
+                    super_token.update(updated_at: Time.now)
+                end
                 return  {status: "ok", user:super_token.user}
             end
         else
