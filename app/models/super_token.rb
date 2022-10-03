@@ -5,6 +5,7 @@ class SuperToken < ApplicationRecord
     # avoid changing this number but if changed all tokens prior to change will be deleted ordered by usage (the most active token stays)
     LIMIT_TOKENS_PER_USER = 5
     AUTO_REFRESH = false
+    DAYS_TO_EXPIRE = 14
     def self.generate_token(user,request)
         if user && request
             all_tokens = SuperToken.where(user_id: user.id)
@@ -50,13 +51,13 @@ class SuperToken < ApplicationRecord
     end
 
 
-    def self.expiry_time days
-        2 * days
+    def self.expiry_time
+        86400 * DAYS_TO_EXPIRE
     end
 
     def self.is_expired time
         age = Time.now.to_i - time
-        expiry_time(14) < age ? true : false
+        expiry_time < age ? true : false
     end
 
 end
