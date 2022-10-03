@@ -3,7 +3,7 @@ class SuperToken < ApplicationRecord
     belongs_to :user
     # if no limit is desired then set const to 0
     # avoid changing this number but if changed all tokens prior to change will be deleted ordered by usage (the most active token stays)
-    LIMIT_TOKENS_PER_USER = 2
+    LIMIT_TOKENS_PER_USER = 5
     AUTO_REFRESH = false
     def self.generate_token(user,request)
         if user && request
@@ -26,7 +26,7 @@ class SuperToken < ApplicationRecord
             # generate has https://github.com/rails/rails/blob/main/activerecord/lib/active_record/secure_token.rb
             hash = SecureRandom.base58(36)
             # generate token based off user
-            SuperToken.create!(token:hash, user_id: user.id, client_ip: request.remote_ip, agent: request.user_agent)
+            SuperToken.create!(token:hash, user_id: user.id, client_ip: request.remote_ip, agent: request.user_agent, expiry: Time.now)
         else 
             raise "user and/or request arguments undefined"
         end
@@ -34,13 +34,14 @@ class SuperToken < ApplicationRecord
     def self.vaildate_super(token,request)
         super_token = SuperToken.find_by!(token:token)
         if super_token.client_ip == request.remote_ip
-            if is_expired super_token.updated_at.to_i
+            if is_expired super_token.expiry.to_i
                 super_token.destroy 
                 {status: "bad", error:"401 not authorized", message:"EXPIRED TOKEN"}
             else
                 if AUTO_REFRESH 
-                    super_token.update(updated_at: Time.now)
+                    super_token.update(expiry: Time.now)
                 end
+                super_token.update(updated_at: Time.now)
                 return  {status: "ok", user:super_token.user}
             end
         else
@@ -50,7 +51,7 @@ class SuperToken < ApplicationRecord
 
 
     def self.expiry_time days
-        86400 * days
+        2 * days
     end
 
     def self.is_expired time
