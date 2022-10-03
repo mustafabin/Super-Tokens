@@ -3,15 +3,14 @@ class SuperToken < ApplicationRecord
     belongs_to :user
     # if no limit is desired then set const to 0
     # avoid changing this number but if changed all tokens prior to change will be deleted ordered by usage (the most active token stays)
-    LIMIT_TOKENS_PER_USER = 5
+    LIMIT_TOKENS_PER_USER = 2
     AUTO_REFRESH = false
     DAYS_TO_EXPIRE = 14
     def self.generate_token(user,request)
         if user && request
             all_tokens = SuperToken.where(user_id: user.id)
-            # if there is a limit destroy the least active token
+            # if there is a limit destroy the least active token(s)
             if LIMIT_TOKENS_PER_USER != 0 && all_tokens.length >= LIMIT_TOKENS_PER_USER
-                # if the length of tokens exceeds limit destroy the oldest tokens
                 if all_tokens.length > LIMIT_TOKENS_PER_USER
                     # Because the amount of active tokens exceeds the limit
                     # All of oldest tokens up to the limit must be deleted 
