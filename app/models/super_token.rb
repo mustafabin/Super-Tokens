@@ -44,10 +44,10 @@ class SuperToken < ApplicationRecord
                 else
                     super_token.update(updated_at: Time.now)
                 end
-                return  {status: "ok", user:super_token.user}
+                 {status: "ok", user:super_token.user.profile}
             end
         else
-            {status: "bad", error:"403 forbidden", message:"IP DOESNT MATCH"}
+            {status: "bad", error:"403 forbidden", message:"DIFFERENT DEVICE "}
         end
     end
 
