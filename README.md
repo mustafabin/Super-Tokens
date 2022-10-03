@@ -1,6 +1,6 @@
 # SuperTokens
 
-> Any contact inquires please email mustafa@binalhag.dev
+> For any contact inquires please email mustafa@binalhag.dev
 
 ## Getting started
 
@@ -24,7 +24,9 @@ OPTIONAL
 
 Spin up sample front end
 
-    $ npm run dev --prefix client
+    $ cd client
+    $ npm install
+    $ npm run dev
 
 ## What is SuperTokens?
 
@@ -75,3 +77,7 @@ How the token is generated
     SuperToken.create!(token:hash, user_id: user.id, client_ip: request.remote_ip, agent: request.user_agent, expiry: Time.now)
 
 ```
+
+## Token Validation
+
+In progress 🛠 🛠 🛠
