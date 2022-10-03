@@ -17,6 +17,13 @@ class UsersController < ApplicationController
         render json: @user
     end
     def login 
-        render json: {message: "login route :)"}
+        user = User.find_by!(email:params[:email]).try(:authenticate, params[:password])
+        if user
+            # generate token with custom method
+            token = SuperToken.generate_token(user, request)
+            render json: user, serializer: UserTokenSerializer 
+        else
+            render json: {message: "Incorrect password"}
+        end
     end
 end
