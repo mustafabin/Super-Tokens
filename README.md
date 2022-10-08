@@ -2,6 +2,17 @@
 
 > For any contact inquires please email mustafa@binalhag.dev
 
+- [Heading](#Gettingstarted)
+  - [Sub-heading](#sub-heading)
+  - [Sub-heading](#sub-heading)
+  - [Sub-heading](#sub-heading)
+- [Heading](#heading-1)
+  - [Sub-heading](#sub-heading-1)
+  - [Sub-heading](#sub-heading-1)
+- [Heading](#heading-2)
+  - [Sub-heading](#sub-heading-2)
+  - [Sub-heading](#sub-heading-2)
+
 ## Getting started
 
 Install project dependencies
@@ -80,4 +91,22 @@ How the token is generated
 
 ## Token Validation
 
-In progress 🛠 🛠 🛠
+> How to authenticate a route
+
+`app/controllers/users_controller.rb`
+
+```ruby
+    def authorize
+        @user = SuperToken.vaildate_super request
+    end
+```
+
+example response from `vaildate_super` method
+
+```ruby
+{status: "bad", error:"401 not authorized", message:"EXPIRED TOKEN"}
+
+{status: "ok", user:super_token.user.profile}
+
+{status: "bad", error:"403 forbidden", message:"DIFFERENT DEVICE "}
+```
