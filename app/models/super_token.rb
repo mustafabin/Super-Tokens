@@ -33,7 +33,13 @@ class SuperToken < ApplicationRecord
     end
     def self.vaildate_super request
         token = request.headers["SuperToken"]
-        super_token = SuperToken.find_by!(token:token)
+        if !token
+            return {status: "bad", error:"SuperToken Header Found", message:"Header needs to called SuperToken not anything else"}
+        end
+        super_token = SuperToken.find_by(token:token)
+        if !super_token
+            return {status: "bad", error:"SuperToken Not Found", message:"Token doesnt exist in database"}
+        end
         if super_token.client_ip == request.remote_ip
             if is_expired super_token.expiry.to_i
                 super_token.destroy 
