@@ -2,42 +2,12 @@
 
 > For any contact inquires please email mustafa@binalhag.dev
 
-- [Heading](#Gettingstarted)
-  - [Sub-heading](#sub-heading)
-  - [Sub-heading](#sub-heading)
-  - [Sub-heading](#sub-heading)
-- [Heading](#heading-1)
-  - [Sub-heading](#sub-heading-1)
-  - [Sub-heading](#sub-heading-1)
-- [Heading](#heading-2)
-  - [Sub-heading](#sub-heading-2)
-  - [Sub-heading](#sub-heading-2)
-
-## Getting started
-
-Install project dependencies
-
-    $ bundle install
-
-Migrate database
-
-    $ rails db:migrate
-
-Start rails server
-
-    $ rails server
-
-Postman environment
-
-https://www.postman.com/lunar-satellite-120138/workspace/supertokens/collection/20741642-ec703425-55b1-4d8a-bdb7-353a0284c9d1?action=share&creator=20741642
-
-OPTIONAL
-
-Spin up sample front end
-
-    $ cd client
-    $ npm install
-    $ npm run dev
+- [SuperTokens](#supertokens)
+  - [What is SuperTokens?](#what-is-supertokens)
+  - [Getting started](#getting-started)
+- [Features](#features)
+  - [Token Generation](#token-generation)
+  - [Token Validation](#token-validation)
 
 ## What is SuperTokens?
 
@@ -59,9 +29,41 @@ Json Web Tokens was my first exposure to user authentication but with its shortc
 - Request IP is compared to the the IP of user that minted that token ✅
 - A variable amount of logged in devices can be set and changed any time ✅
 
+
+## Getting started
+<p id="Gettingstarted">
+
+Install project dependencies
+
+    $ bundle install
+
+Migrate database
+
+    $ rails db:migrate
+
+Start rails server
+
+    $ rails server
+
+<p id="api">
+Postman environment
+
+https://www.postman.com/lunar-satellite-120138/workspace/supertokens/collection/20741642-ec703425-55b1-4d8a-bdb7-353a0284c9d1?action=share&creator=20741642
+
+OPTIONAL
+
+Spin up sample front end
+
+    $ cd client
+    $ npm install
+    $ npm run dev
+    
+<p id="Features">
+
 # Features
 
 ## Token Generation
+<p id="TokenGeneration">
 
 > Example login method `app/controllers/users_controller.rb`
 
@@ -90,6 +92,7 @@ How the token is generated
 ```
 
 ## Token Validation
+<p id="TokenValidation">
 
 > How to authenticate a route
 
