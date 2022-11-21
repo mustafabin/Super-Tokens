@@ -109,7 +109,7 @@ example response from `vaildate_super` method
 ```ruby
 {status: "bad", error:"401 not authorized", message:"EXPIRED TOKEN"}
 
-{status: "ok", user:super_token.user.profile}
+{status: "ok", user:super_token.user}
 
 {status: "bad", error:"403 forbidden", message:"DIFFERENT DEVICE "}
 ```
