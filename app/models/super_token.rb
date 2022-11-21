@@ -11,19 +11,19 @@ class SuperToken < ApplicationRecord
             # generate token based off user
             SuperToken.create!(token:hash, user_id: user.id, client_ip: request.remote_ip, agent: request.user_agent, expiry: Time.now)
         else 
-            raise "user and/or request arguments undefined"
+            return {status: "400", error:"Bad request", message:"user and/or request arguments undefined"}
         end
     end
     def self.vaildate_super request
         token = request.headers["SuperToken"]
         if !token
-            return {status: "bad", error:"SuperToken Header Found", message:"Header needs to called SuperToken not anything else"}
+            return {status: "400", error:"SuperToken Header Not Found", message:"Header needs to called SuperToken not anything else"}
         end
         super_token = SuperToken.find_by!(token:token)
         if super_token.agent == request.user_agent
             if is_expired(super_token.expiry.to_i)
                 super_token.destroy 
-                {status: "bad", error:"401 not authorized", message:"EXPIRED TOKEN"}
+                {status: "401", error:"401 not authorized", message:"EXPIRED TOKEN"}
             else
                 if AUTO_REFRESH 
                     # updates lifespan of token
@@ -32,10 +32,10 @@ class SuperToken < ApplicationRecord
                     # doesnt update lifespan but this is here b/c updated_at is how to track the lastest used token
                     super_token.update(updated_at: Time.now)
                 end
-                 {status: "ok", user:super_token.user}
+                 {status: "200", user:super_token.user}
             end
         else
-            {status: "bad", error:"403 forbidden", message:"DIFFERENT DEVICE "}
+            {status: "403", error:"403 forbidden", message:"DIFFERENT DEVICE "}
         end
     end
 

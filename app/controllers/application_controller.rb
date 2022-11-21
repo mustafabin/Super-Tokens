@@ -8,15 +8,15 @@ class ApplicationController < ActionController::API
             # no errors during vaildation
             @user = verify[:user]
         else
-            render json: verify
+             render json: verify, status: verify[:status]
         end
     end
 
     private
     def render_not_found_response(exception)
-    render json: { error: "#{exception.model} not found"}, status: :not_found
+        render json: { error: "#{exception.model} not found"}, status: :not_found
     end
     def render_unprocessable_entity_response(exception)
-    render json: { errors: exception.record.errors.full_messages }, status: :unprocessable_entity
+        render json: { errors: exception.record.errors.full_messages }, status: :unprocessable_entity
     end
 end

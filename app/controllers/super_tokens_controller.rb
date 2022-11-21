@@ -17,7 +17,7 @@ class SuperTokensController < ApplicationController
             token = SuperToken.generate_token(user, request)
             render json: user, serializer: SuperTokenSerializer
         else
-            render json: {message: "Incorrect password"}
+            render json: {status:"403", error: "Incorrect password"}, status: 403
         end
     end
 end
