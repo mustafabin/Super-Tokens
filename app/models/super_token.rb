@@ -21,16 +21,18 @@ class SuperToken < ApplicationRecord
         end
         super_token = SuperToken.find_by!(token:token)
         if super_token.agent == request.user_agent
-            if is_expired super_token.expiry.to_i
+            if is_expired(super_token.expiry.to_i)
                 super_token.destroy 
                 {status: "bad", error:"401 not authorized", message:"EXPIRED TOKEN"}
             else
                 if AUTO_REFRESH 
+                    # updates lifespan of token
                     super_token.update(expiry: Time.now)
                 else
+                    # doesnt update lifespan but this is here b/c updated_at is how to track the lastest used token
                     super_token.update(updated_at: Time.now)
                 end
-                 {status: "ok", user:super_token.user.profile}
+                 {status: "ok", user:super_token.user}
             end
         else
             {status: "bad", error:"403 forbidden", message:"DIFFERENT DEVICE "}

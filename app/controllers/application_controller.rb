@@ -3,7 +3,13 @@ class ApplicationController < ActionController::API
     rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_response
 
     def authorize
-        @user = SuperToken.vaildate_super request
+        verify = SuperToken.vaildate_super request
+        if verify[:user]
+            # no errors during vaildation
+            @user = verify[:user]
+        else
+            render json: verify
+        end
     end
 
     private
